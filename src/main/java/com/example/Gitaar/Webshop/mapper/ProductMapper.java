@@ -4,8 +4,6 @@ import com.example.Gitaar.Webshop.domain.Product;
 import com.example.Gitaar.Webshop.dto.product.ProductRequestDto;
 import com.example.Gitaar.Webshop.dto.product.ProductResponseDto;
 import com.example.Gitaar.Webshop.service.ProductService;
-import com.example.Gitaar.Webshop.service.graphql.GraphQLProductProvider;
-import graphql.ExecutionResult;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -20,7 +18,6 @@ public class ProductMapper {
 
     private final ModelMapper modelMapper;
     private final ProductService productService;
-    private final GraphQLProductProvider productProvider;
 
     private Product convertToEntity(ProductRequestDto productRequestDto) {
         return modelMapper.map(productRequestDto, Product.class);
@@ -52,11 +49,4 @@ public class ProductMapper {
         return convertToResponseDto(productService.saveProduct(convertToEntity(productRequestDto), file));
     }
 
-    public ExecutionResult getAllProductsByQuery(String query) {
-        return productProvider.getGraphQL().execute(query);
-    }
-
-    public ExecutionResult getProductByQuery(String query) {
-        return productProvider.getGraphQL().execute(query);
-    }
 }

@@ -3,7 +3,6 @@ package com.example.Gitaar.Webshop.service;
 import com.example.Gitaar.Webshop.domain.Product;
 import com.example.Gitaar.Webshop.domain.Review;
 import com.example.Gitaar.Webshop.domain.User;
-import com.example.Gitaar.Webshop.security.oauth2.OAuth2userInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -24,10 +23,6 @@ public interface UserService {
 
     boolean registerUser(User user);
 
-    User registerOauth2User(String provider, OAuth2userInfo oAuth2UserInfo);
-
-    User updateOauth2User(User user, String provider, OAuth2userInfo oAuth2UserInfo);
-
     boolean activateUser(String code);
 
     boolean sendPasswordResetCode(String email);
@@ -39,4 +34,5 @@ public interface UserService {
     User updateProfile(String email, User user);
 
     void addReviewToProduct(Review review, Long productId);
+
 }

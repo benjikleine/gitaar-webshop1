@@ -4,9 +4,6 @@ import com.example.Gitaar.Webshop.domain.*;
 import com.example.Gitaar.Webshop.repository.ProductRepository;
 import com.example.Gitaar.Webshop.repository.ReviewRepository;
 import com.example.Gitaar.Webshop.repository.UserRepository;
-import com.example.Gitaar.Webshop.security.JwtProvider;
-import com.example.Gitaar.Webshop.security.UserPrincipal;
-import com.example.Gitaar.Webshop.security.oauth2.OAuth2userInfo;
 import com.example.Gitaar.Webshop.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +25,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Value("${hostname}")
     private String hostname;
 
-    private final JwtProvider jwtProvider;
     private final UserRepository userRepository;
     private final MailSender mailSender;
     private final PasswordEncoder passwordEncoder;
@@ -36,7 +32,9 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     private final ReviewRepository reviewRepository;
 
     @Override
-    public User findUserById(Long userId) { return userRepository.findById(userId).get(); }
+    public User findUserById(Long userId) {
+        return userRepository.findById(userId).get();
+    }
 
     @Override
     public User findUserByEmail(String email) {
@@ -56,74 +54,6 @@ public class UserServiceImpl implements UserDetailsService, UserService {
     @Override
     public List<Product> getCart(List<Long> productIds) {
         return productRepository.findByIdIn(productIds);
-    }
-
-    @Override
-    public Map<String, Object> login(String email) {
-        User user = userRepository.findByEmail(email);
-        String userRole = user.getRoles().iterator().next().name();
-        String token = jwtProvider.createToken(email, userRole);
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("email", email);
-        response.put("token", token);
-        response.put("userRole", userRole);
-        return response;
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException, LockedException {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        if (user.getActivationCode() != null) {
-            throw new LockedException("email not activated");
-        }
-        return UserPrincipal.create(user);
-    }
-
-    @Override
-    public boolean registerUser(User user) {
-        User userFromDb = userRepository.findByEmail(user.getEmail());
-
-        if (userFromDb != null) {
-            return false;
-        }
-        user.setActive(false);
-        user.setRoles(Collections.singleton(Role.USER));
-        user.setProvider(AuthProvider.LOCAL);
-        user.setActivationCode(UUID.randomUUID().toString());
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
-
-        String subject = "Activation code";
-        List<String> emailMessages = new ArrayList<>();
-        emailMessages.add("Welcome to Perfume online store.");
-        emailMessages.add("Please follow the link ");
-        sendMessage(user, emailMessages, subject, user.getActivationCode(), "activate");
-        return true;
-    }
-
-    @Override
-    public User registerOauth2User(String provider, OAuth2userInfo oAuth2UserInfo) {
-        User user = new User();
-        user.setEmail(oAuth2UserInfo.getEmail());
-        user.setFirstName(oAuth2UserInfo.getFirstName());
-        user.setLastName(oAuth2UserInfo.getLastName());
-        user.setActive(true);
-        user.setRoles(Collections.singleton(Role.USER));
-        user.setProvider(AuthProvider.valueOf(provider.toUpperCase()));
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User updateOauth2User(User user, String provider, OAuth2userInfo oAuth2UserInfo) {
-        user.setFirstName(oAuth2UserInfo.getFirstName());
-        user.setLastName(oAuth2UserInfo.getLastName());
-        user.setProvider(AuthProvider.valueOf(provider.toUpperCase()));
-        return userRepository.save(user);
     }
 
     @Override

@@ -11,7 +11,6 @@ import com.example.Gitaar.Webshop.exception.InputFieldException;
 import com.example.Gitaar.Webshop.exception.PasswordException;
 import com.example.Gitaar.Webshop.mapper.OrderMapper;
 import com.example.Gitaar.Webshop.mapper.UserMapper;
-import com.example.Gitaar.Webshop.security.UserPrincipal;
 import com.example.Gitaar.Webshop.utils.ControllerUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
@@ -84,7 +84,7 @@ public class UserController {
     }
 
     @PostMapping("/review")
-    public ResponseEntity<String> addReviewToProduct(@Valid @RequestBody ReviewRequestDto review, BindingResult bindingResult) {
+    public ResponseEntity<String> addReviewToPerfume(@Valid @RequestBody ReviewRequestDto review, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             throw new InputFieldException(bindingResult);
         } else {
