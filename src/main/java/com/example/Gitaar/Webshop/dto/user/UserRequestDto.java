@@ -1,5 +1,6 @@
 package com.example.Gitaar.Webshop.dto.user;
 
+import com.example.Gitaar.Webshop.domain.Role;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;

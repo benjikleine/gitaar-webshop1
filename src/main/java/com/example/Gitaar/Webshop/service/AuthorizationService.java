@@ -2,6 +2,7 @@ package com.example.Gitaar.Webshop.service;
 
 import com.example.Gitaar.Webshop.repository.RoleRepository;
 import com.example.Gitaar.Webshop.repository.UserRepository;
+import com.example.Gitaar.Webshop.security.jwt.JwtUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

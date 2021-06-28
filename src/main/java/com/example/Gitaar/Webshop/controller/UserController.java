@@ -12,6 +12,7 @@ import com.example.Gitaar.Webshop.exception.PasswordException;
 import com.example.Gitaar.Webshop.mapper.OrderMapper;
 import com.example.Gitaar.Webshop.mapper.UserMapper;
 import com.example.Gitaar.Webshop.utils.ControllerUtils;
+import com.sun.security.auth.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
